@@ -1,25 +1,38 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 
-const itemList = []
+let itemID = 0
+let itemList = []
+let timeIsValid = false
 
 function App() {
-  const [time, setTime] = useState('Time')
-  const [description, setDescription] = useState('Description')
+  const [time, setTime] = useState('')
+  const [description, setDescription] = useState('')
 
   const createItem = () => {
+    if (!timeIsValid) {
+      console.log('Please enter a valid time!')
+      return
+    }
+    if (description === '') {
+      console.log('Please enter your decription...')
+      return
+    }
     const itemTime = time
     const itemDescription = description
     const formatData = {
-      itemTime,
-      itemDescription
-    }
+        itemID,
+        itemTime,
+        itemDescription
+    };
+    itemID++
     itemList.push(formatData)
     localStorage.setItem('itemList', JSON.stringify(itemList))
   }
 
   const readItem = () => {
-    const register = JSON.parse(localStorage.getItem('itemList'))
-    console.log(register)
+    itemList.push(JSON.parse(localStorage.getItem('itemList')))
+    // document.getElementById('item-list').innerHTML = register
+    console.log(itemList)
   }
 
   const updateItem = () => {
@@ -30,11 +43,24 @@ function App() {
     console.log("Delete Connected!!")
   }
 
+  const timeValidation = (inputTime) => {
+    const timeRegex = /^\d{2}\/\d{2}\/\d{4}$/ ;
+    return timeRegex.test(inputTime)
+  }
+
+  useEffect(() => {
+    if (time === '') {
+      return
+    }
+    timeIsValid = timeValidation(time)
+    console.log(timeIsValid)
+  }, [time])
+
   return (
     <div>
       <h1>Start Here!</h1>
         <form>
-          <input type='text' name='time' id='time' placeholder='Time' onChange={(e) => {setTime(e.target.value)}}/>
+          <input type='text' name='time' id='time' placeholder='MM/DD/YYYY' onChange={(e) => {setTime(e.target.value)}}/>
           <input type='text' name='description' id='description' placeholder='Description' onChange={(e) => {setDescription(e.target.value)}}/>
         </form>
         <div className='button'>
@@ -51,7 +77,10 @@ function App() {
                 <th>Description</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id='item-list'>
+              <tr>
+                 <td></td>
+              </tr>
             </tbody>
           </table>
         </div>
