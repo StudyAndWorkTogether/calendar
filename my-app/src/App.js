@@ -1,14 +1,17 @@
 import React, {useState, useEffect} from 'react'
 
-let itemID = 0
-let itemList = []
+let itemID
+let itemList
 let timeIsValid = false
 
 function App() {
   const [time, setTime] = useState('')
   const [description, setDescription] = useState('')
+  console.log('App', itemID)
 
   const createItem = () => {
+    console.log('Below is from createItem')
+    console.log('itemID BEFORE ++', itemID)
     if (!timeIsValid) {
       console.log('Please enter a valid time!')
       return
@@ -17,14 +20,18 @@ function App() {
       console.log('Please enter your decription...')
       return
     }
-    const itemTime = time
-    const itemDescription = description
+    const dataTime = time
+    const dataDescription = description
+    console.log(itemID)
+    const dataID = itemID
     const formatData = {
-        itemID,
-        itemTime,
-        itemDescription
+        dataID,
+        dataTime,
+        dataDescription
     };
     itemID++
+    console.log('itemID AFTER ++', itemID)
+    console.log('From creataItem', itemID)
     itemList.push(formatData)
     localStorage.setItem('itemList', JSON.stringify(itemList))
   }
@@ -56,6 +63,14 @@ function App() {
     console.log(timeIsValid)
   }, [time])
 
+  useEffect(() => {
+    itemList = JSON.parse(localStorage.getItem('itemList'))
+    if (itemList === null) {
+      itemList = []
+    }
+    console.log(itemID, itemList)
+  })
+
   return (
     <div>
       <h1>Start Here!</h1>
@@ -79,7 +94,8 @@ function App() {
             </thead>
             <tbody id='item-list'>
               <tr>
-                 <td></td>
+                 <td>Time</td>
+                 <td>Description</td>
               </tr>
             </tbody>
           </table>
