@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { nanoid } from 'nanoid'
 import dayjs from 'dayjs'
 
 function App() {
   const storageList = JSON.parse(localStorage.getItem('itemList'))
-  const itemList = useState(!storageList ? [] : storageList)
-  const [listLength, setListLength] = useState(itemList.length)
+  const [itemList, setItemList] = useState(!storageList ? [] : storageList)
   const [time, setTime] = useState('')
   const [description, setDescription] = useState('')
-  console.log('fromApp', itemList)
 
   const createItem = () => {
     if (description === '') {
@@ -23,22 +21,19 @@ function App() {
       inputTime,
       inputDescription
     };
-    setListLength(itemList.push(formatData))
+    itemList.push(formatData)
+    setItemList([...itemList])
     localStorage.setItem('itemList', JSON.stringify(itemList))
     console.log(itemList)
   }
 
-  useEffect(() => {
-    console.log('fromUseEffect')
-  }, [listLength])
-
-  // const readItem = () => {
-  //   itemList.push(JSON.parse(localStorage.getItem('itemList')))
-  //   document.getElementById('item-list').innerHTML = register
-  //   console.log('From readItem ---', itemList)
-  //   setItemList(itemList)
-  // }
-
+  const deleteItem = (i) => {
+    return () => {
+      itemList.splice(i, 1)
+      setItemList([...itemList])
+      localStorage.setItem('itemList', JSON.stringify(itemList))
+    }
+  }
 
   return (
     <div>
@@ -69,10 +64,11 @@ function App() {
             </tr>
           </thead>
           <tbody id='item-list'>
-            {itemList.map((item) => 
+            {itemList.map((item, i) =>
               <tr key={item.inputID}>
                 <td>{item.inputTime}</td>
                 <td>{item.inputDescription}</td>
+                <td><button onClick={deleteItem(i)}>Delete</button></td>
               </tr>
             )}
           </tbody>
