@@ -1,16 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { nanoid } from 'nanoid'
 import dayjs from 'dayjs'
 
 function App() {
-  const [itemList, setItemList] = useState(JSON.parse(localStorage.getItem('itemList')))
+  const storageList = JSON.parse(localStorage.getItem('itemList'))
+  const itemList = useState(!storageList ? [] : storageList)
+  const [listLength, setListLength] = useState(itemList.length)
   const [time, setTime] = useState('')
   const [description, setDescription] = useState('')
-  
-  // to avoid error to push data to itemList if it's null when no any data in localStorage
-  if(itemList === null) {
-    setItemList([])
-  }
+  console.log('fromApp', itemList)
 
   const createItem = () => {
     if (description === '') {
@@ -25,17 +23,22 @@ function App() {
       inputTime,
       inputDescription
     };
-    itemList.push(formatData)
+    setListLength(itemList.push(formatData))
     localStorage.setItem('itemList', JSON.stringify(itemList))
-    // setItemList(itemList)
-  }
-
-  const readItem = () => {
-    // itemList.push(JSON.parse(localStorage.getItem('itemList')))
-    // document.getElementById('item-list').innerHTML = register
-
     console.log(itemList)
   }
+
+  useEffect(() => {
+    console.log('fromUseEffect')
+  }, [listLength])
+
+  // const readItem = () => {
+  //   itemList.push(JSON.parse(localStorage.getItem('itemList')))
+  //   document.getElementById('item-list').innerHTML = register
+  //   console.log('From readItem ---', itemList)
+  //   setItemList(itemList)
+  // }
+
 
   return (
     <div>
@@ -55,7 +58,7 @@ function App() {
       </form>
       <div className='button'>
         <button onClick={createItem}>Create Item</button>
-        <button onClick={readItem}>Read Item</button>
+        {/* <button onClick={readItem}>Read Item</button> */}
       </div>
       <div className='table-wrapper'>
         <table className='table'>
@@ -66,6 +69,12 @@ function App() {
             </tr>
           </thead>
           <tbody id='item-list'>
+            {itemList.map((item) => 
+              <tr key={item.inputID}>
+                <td>{item.inputTime}</td>
+                <td>{item.inputDescription}</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
