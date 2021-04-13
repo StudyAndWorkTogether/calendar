@@ -7,6 +7,7 @@ function App() {
   const [itemList, setItemList] = useState(!storageList ? [] : storageList)
   const [time, setTime] = useState('')
   const [description, setDescription] = useState('')
+  // const [display, setDisplay] = useState({display: 'block'})
 
   const createItem = () => {
     if (description === '') {
@@ -25,6 +26,12 @@ function App() {
     setItemList([...itemList])
     localStorage.setItem('itemList', JSON.stringify(itemList))
     console.log(itemList)
+  }
+
+  const updateItem = (i) => {
+    return () => {
+      console.log("clickUpdate", i)
+    }
   }
 
   const deleteItem = (i) => {
@@ -53,7 +60,6 @@ function App() {
       </form>
       <div className='button'>
         <button onClick={createItem}>Create Item</button>
-        {/* <button onClick={readItem}>Read Item</button> */}
       </div>
       <div className='table-wrapper'>
         <table className='table'>
@@ -66,8 +72,24 @@ function App() {
           <tbody id='item-list'>
             {itemList.map((item, i) =>
               <tr key={item.inputID}>
-                <td>{item.inputTime}</td>
-                <td>{item.inputDescription}</td>
+                <td>
+                  <input type="datetime-local"
+                    name="time"
+                    min="1900-01-01T00:00"
+                    max="2200-12-31T00:00"
+                    value={item.inputTime.substring(0,item.inputTime.length-1)}
+                    onChange={(e) => setTime(dayjs(e.target.value).toISOString())}
+                  />
+                </td>
+                <td>
+                  <input type='text'
+                    name='description'
+                    placeholder='Description'
+                    value={item.inputDescription}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </td>
+                <td><button onClick={updateItem(i)}>Update</button></td>
                 <td><button onClick={deleteItem(i)}>Delete</button></td>
               </tr>
             )}
