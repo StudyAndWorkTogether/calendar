@@ -7,7 +7,6 @@ function App() {
   const [itemList, setItemList] = useState(!storageList ? [] : storageList)
   const [time, setTime] = useState('')
   const [description, setDescription] = useState('')
-  // const [display, setDisplay] = useState({display: 'block'})
 
   const createItem = () => {
     if (description === '') {
@@ -25,7 +24,6 @@ function App() {
     itemList.push(formatData)
     setItemList([...itemList])
     localStorage.setItem('itemList', JSON.stringify(itemList))
-    console.log(itemList)
   }
 
   const updateItem = (i) => {
@@ -77,7 +75,7 @@ function App() {
                     name="time"
                     min="1900-01-01T00:00"
                     max="2200-12-31T00:00"
-                    value={item.inputTime.substring(0,item.inputTime.length-1)}
+                    value={dayjs(item.inputTime).format('YYYY-MM-DDTHH:mm:ss')}
                     onChange={(e) => setTime(dayjs(e.target.value).toISOString())}
                   />
                 </td>
