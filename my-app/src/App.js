@@ -30,22 +30,18 @@ function App() {
     itemList.sort((a, b) => {
       return (a.inputTime < b.inputTime) ? -1 : ((a.inputTime > b.inputTime) ? 1 : 0)
     })
-    setItemList([...itemList])
+    setItemList(() => [...itemList])
     localStorage.setItem('itemList', JSON.stringify(itemList))
   }
 
-  const updateItem = (i) => {
-    return () => {
-      console.log("clickUpdate", i)
-    }
+  const updateItem = (e, i) => {
+    console.log(e.target.value, i)
   }
 
   const deleteItem = (i) => {
-    return () => {
-      itemList.splice(i, 1)
-      setItemList([...itemList])
-      localStorage.setItem('itemList', JSON.stringify(itemList))
-    }
+    itemList.splice(i, 1)
+    setItemList(() => [...itemList])
+    localStorage.setItem('itemList', JSON.stringify(itemList))
   }
 
   return (
@@ -57,7 +53,6 @@ function App() {
         min="1900-01-01T00:00"
         max="2200-12-31T00:00"
         onChange={(e) => setTime(dayjs(e.target.value).toISOString())}
-        onClick={(e) => console.log(e.target.value === '')}
         />
         <input type='text' id='description'
         name='description'
@@ -85,19 +80,18 @@ function App() {
                     min="1900-01-01T00:00"
                     max="2200-12-31T00:00"
                     value={dayjs(item.inputTime).format('YYYY-MM-DDTHH:mm:ss')}
-                    onChange={(e) => setTime(dayjs(e.target.value).toISOString())}
+                    onChange={e => setTime(dayjs(e.target.value).toISOString())}
                   />
                 </td>
                 <td>
                   <input type='text'
-                    name='description'
-                    placeholder='Description'
+                    name='itemDescription'
                     value={item.inputDescription}
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={(e) => updateItem(e, i)}
                   />
                 </td>
-                <td><button onClick={updateItem(i)}>Update</button></td>
-                <td><button onClick={deleteItem(i)}>Delete</button></td>
+                <td><button onClick={createItem}>Update</button></td>
+                <td><button onClick={() => deleteItem(i)}>Delete</button></td>
               </tr>
             )}
           </tbody>
