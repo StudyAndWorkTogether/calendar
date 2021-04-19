@@ -34,8 +34,30 @@ function App() {
     localStorage.setItem('itemList', JSON.stringify(itemList))
   }
 
-  const updateItem = (e, i) => {
-    console.log(e.target.value, i)
+  const handleDescription = (e, i) => {
+    itemList[i].inputDescription = e.target.value
+    setItemList(() => [...itemList])
+  }
+
+  const handleTime = (e, i) => {
+    itemList[i].inputTime = dayjs(e.target.value).toISOString()
+    setItemList(() => [...itemList])
+  }
+
+  const updateItem = (i) => {
+    if(itemList[i].inputDescription === '') {
+      console.log('Please Enter Your Decription...')
+      return
+    }
+    if (itemList[i].inputTime === '') {
+      console.log('Please Choose Your Time...')
+      return
+    }
+    itemList.sort((a, b) => {
+      return (a.inputTime < b.inputTime) ? -1 : ((a.inputTime > b.inputTime) ? 1 : 0)
+    })
+    setItemList(() => [...itemList])
+    localStorage.setItem('itemList', JSON.stringify(itemList))
   }
 
   const deleteItem = (i) => {
@@ -80,17 +102,17 @@ function App() {
                     min="1900-01-01T00:00"
                     max="2200-12-31T00:00"
                     value={dayjs(item.inputTime).format('YYYY-MM-DDTHH:mm:ss')}
-                    onChange={e => setTime(dayjs(e.target.value).toISOString())}
+                    onChange={(e) => handleTime(e, i)}
                   />
                 </td>
                 <td>
                   <input type='text'
                     name='itemDescription'
                     value={item.inputDescription}
-                    onChange={(e) => updateItem(e, i)}
+                    onChange={(e) => handleDescription(e, i)}
                   />
                 </td>
-                <td><button onClick={createItem}>Update</button></td>
+                <td><button onClick={() => updateItem(i)}>Update</button></td>
                 <td><button onClick={() => deleteItem(i)}>Delete</button></td>
               </tr>
             )}
