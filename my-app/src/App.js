@@ -8,9 +8,14 @@ function App() {
   const [time, setTime] = useState('')
   const [description, setDescription] = useState('')
 
+
   const createItem = () => {
     if (description === '') {
       console.log('Please Enter Your Decription...')
+      return
+    }
+    if (time === '') {
+      console.log('Please Choose Your Time...')
       return
     }
     const inputID = nanoid(11)
@@ -22,6 +27,9 @@ function App() {
       inputDescription
     };
     itemList.push(formatData)
+    itemList.sort((a, b) => {
+      return (a.inputTime < b.inputTime) ? -1 : ((a.inputTime > b.inputTime) ? 1 : 0)
+    })
     setItemList([...itemList])
     localStorage.setItem('itemList', JSON.stringify(itemList))
   }
@@ -49,6 +57,7 @@ function App() {
         min="1900-01-01T00:00"
         max="2200-12-31T00:00"
         onChange={(e) => setTime(dayjs(e.target.value).toISOString())}
+        onClick={(e) => console.log(e.target.value === '')}
         />
         <input type='text' id='description'
         name='description'
