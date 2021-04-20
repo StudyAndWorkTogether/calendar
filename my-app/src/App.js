@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { nanoid } from 'nanoid'
 import dayjs from 'dayjs'
 
 function App() {
-  const storageList = JSON.parse(localStorage.getItem('itemList'))
-  const [itemList, setItemList] = useState(!storageList ? [] : storageList)
+  const [itemList, setItemList] = useState([])
   const [time, setTime] = useState('')
   const [description, setDescription] = useState('')
 
@@ -65,6 +64,13 @@ function App() {
     setItemList(() => [...itemList])
     localStorage.setItem('itemList', JSON.stringify(itemList))
   }
+
+  useEffect(() => {
+    const storageList = JSON.parse(localStorage.getItem('itemList'))
+    if(storageList !== null) {
+      setItemList([...storageList])
+    }
+  },[])
 
   return (
     <div>
