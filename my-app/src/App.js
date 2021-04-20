@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { nanoid } from 'nanoid'
-import dayjs from 'dayjs'
+import moment from 'moment'
 
 function App() {
   const [itemList, setItemList] = useState([])
@@ -39,7 +39,7 @@ function App() {
   }
 
   const handleTime = (e, i) => {
-    itemList[i].inputTime = dayjs(e.target.value).toISOString()
+    itemList[i].inputTime = moment(e.target.value).toISOString()
     setItemList(() => [...itemList])
   }
 
@@ -80,7 +80,7 @@ function App() {
         name="time"
         min="1900-01-01T00:00"
         max="2200-12-31T00:00"
-        onChange={(e) => setTime(dayjs(e.target.value).toISOString())}
+        onChange={(e) => setTime(moment(e.target.value).toISOString())}
         />
         <input type='text' id='description'
         name='description'
@@ -107,7 +107,7 @@ function App() {
                     name="time"
                     min="1900-01-01T00:00"
                     max="2200-12-31T00:00"
-                    value={dayjs(item.inputTime).format('YYYY-MM-DDTHH:mm:ss')}
+                    value={moment(item.inputTime).format('YYYY-MM-DDTHH:mm:ss')}
                     onChange={(e) => handleTime(e, i)}
                   />
                 </td>
