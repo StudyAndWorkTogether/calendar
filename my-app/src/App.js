@@ -1,8 +1,8 @@
-import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import React, { useEffect, useState } from 'react'
 import { nanoid } from 'nanoid'
 import moment from 'moment'
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
 
 function App() {
@@ -73,23 +73,23 @@ function App() {
     return {
       id: item.inputID,
       title: item.inputDescription,
-      start: moment(item.inputTime).format(),
-      end: moment(item.inputTime).format()
+      start: moment(item.inputTime).toDate(),
+      end: moment(item.inputTime).toDate()
     }
   })
 
-  const MyCalendar = props => (
+  const MyCalendar = prop => (
     <div>
       <Calendar
         localizer={localizer}
         events={eventsList}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: 500 }}
+        style={{ height: 500, width: 600 }}
       />
     </div>
   )
-
+  
   useEffect(() => {
     const storageList = JSON.parse(localStorage.getItem('itemList'))
     if(storageList !== null) {
@@ -98,7 +98,11 @@ function App() {
   },[])
 
   return (
-    <div>
+    <div style={{
+      color: 'blue',
+      margin: 'auto',
+      width: '50%'
+    }}>
       <h1>Follow Your Plan!!</h1>
       <form>
         <input type="datetime-local" id="time"
